@@ -9,10 +9,12 @@
 # define OPT "Optional arg: [number_of_time_each_philo_will_eat]\n"
 # define EF "🍴"
 # define ES "💤"
+# define DD "💀"
 typedef struct s_philo
 {
 	int				dead;
 	int				index;
+	size_t			l_eat;
 	pthread_mutex_t	fork;
 	pthread_t		th;
 	struct s_table	*table;
@@ -20,6 +22,9 @@ typedef struct s_philo
 
 typedef struct s_table
 {
+	pthread_mutex_t	print;
+	pthread_mutex_t	death;
+	int				dead;
 	t_philo			*philo;
 	unsigned long	time;
 	pthread_t		th_id;
