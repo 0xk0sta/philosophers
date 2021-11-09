@@ -1,6 +1,6 @@
 #include "../includes/philo.h"
 
-t_table	fill_struct(int argc, char **argv, t_table *table)
+int	fill_struct(int argc, char **argv, t_table *table)
 {
 	(*table).t_philo = ft_atoi(argv[1]);
 	(*table).t_to_die = ft_atoi(argv[2]);
@@ -9,9 +9,14 @@ t_table	fill_struct(int argc, char **argv, t_table *table)
 	if (argc == 6)
 		(*table).t_food = ft_atoi(argv[5]);
 	(*table).philo = malloc(sizeof(t_philo) * (*table).t_philo);
+	if ((*table).philo == NULL)
+	{
+		table = NULL;
+		return (1);
+	}
 	(*table).time = get_time();
 	(*table).philo->table = table;
-	return (*table);
+	return (0);
 }
 
 int	validate_args(t_table *table, int argc)

@@ -10,6 +10,14 @@
 # define EF "🍴"
 # define ES "💤"
 # define DD "💀"
+# define ET "🤔"
+# define RED "\x1b[31m"
+# define GREEN "\x1b[32m"
+# define YELLOW "\x1b[33m"
+# define BLUE "\x1b[34m"
+# define MAG "\x1b[35m"
+# define CYAN "\x1b[36m"
+# define RESET "\x1b[0m"
 typedef struct s_philo
 {
 	int				dead;
@@ -22,6 +30,7 @@ typedef struct s_philo
 
 typedef struct s_table
 {
+	size_t			total_e;
 	pthread_mutex_t	print;
 	pthread_mutex_t	death;
 	int				dead;
@@ -34,8 +43,8 @@ typedef struct s_table
 	unsigned long	t_to_sleep;
 	unsigned long	t_food;
 }t_table;
-void			printer(t_philo philo, int status, int index);
-t_table			fill_struct(int argc, char **argv, t_table *table);
+void			printer(t_philo philo, int status, size_t in);
+int				fill_struct(int argc, char **argv, t_table *table);
 unsigned long	ft_atoi(const char *str);
 int				validate_args(t_table *table, int argc);
 long			get_time(void);
