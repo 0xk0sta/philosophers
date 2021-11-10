@@ -49,7 +49,7 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
-unsigned long	ft_atoi(const char *str)
+long	ft_atoi(const char *str)
 {
 	long				i;
 	long				sign;
@@ -68,6 +68,10 @@ unsigned long	ft_atoi(const char *str)
 	else if (str[i] == '+')
 		i++;
 	while (ft_isdigit(str[i]) != 0)
+	{
+		if (ft_isdigit(str[i] != 0))
+			return (-1);
 		res = res * 10 + (str[i++] - '0');
+	}
 	return (res * sign);
 }

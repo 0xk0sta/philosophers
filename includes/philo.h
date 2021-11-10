@@ -7,10 +7,6 @@
 # define PHILO_H
 # define USAGE "Usage: ./philo philo_num time_to_die time_to_eat time_to_sleep\n"
 # define OPT "Optional arg: [number_of_time_each_philo_will_eat]\n"
-# define EF "🍴"
-# define ES "💤"
-# define DD "💀"
-# define ET "🤔"
 # define RED "\x1b[31m"
 # define GREEN "\x1b[32m"
 # define YELLOW "\x1b[33m"
@@ -20,11 +16,13 @@
 # define RESET "\x1b[0m"
 typedef struct s_philo
 {
+	struct s_philo	*philo_r;
 	int				dead;
 	int				index;
 	size_t			l_eat;
 	pthread_mutex_t	fork;
 	pthread_t		th;
+	struct s_philo	*philo_l;
 	struct s_table	*table;
 }t_philo;
 
@@ -45,7 +43,7 @@ typedef struct s_table
 }t_table;
 void			printer(t_philo philo, int status, size_t in);
 int				fill_struct(int argc, char **argv, t_table *table);
-unsigned long	ft_atoi(const char *str);
+long			ft_atoi(const char *str);
 int				validate_args(t_table *table, int argc);
 long			get_time(void);
 #endif

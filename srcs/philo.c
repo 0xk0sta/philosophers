@@ -1,36 +1,34 @@
 #include "../includes/philo.h"
 #include <fcntl.h>
 
-void	custom_sleep(size_t s_time, t_philo *philo)
+void	custom_sleep(size_t w_time, t_philo *philo)
 {
 	size_t	time;
 
 	time = get_time();
 	while (philo->table->dead != 1)
 	{
-		if (get_time() - time >= s_time)
+		if (get_time() - time >= w_time)
 			break ;
-		usleep(100);
+		usleep(10);
 	}
 }
 
-void 	eat_handler(size_t i, t_philo *philo)
+void 	eat_handler(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->fork);
-	printer(*philo, 0, i);
+	printer(*philo, 0, philo->index);
 	if (philo->table->t_philo == 1)
 		return ;
-	if (i + 1 >= philo->table->t_philo && philo->table->t_philo != 2)
-		i++;
-	pthread_mutex_lock(&philo[i + 1].fork);
-	printer(*philo, 0, i);
+	pthread_mutex_lock(&philo->philo_r->fork);
+	printer(*philo, 0, philo->index);
 	philo->l_eat = get_time();
-	printer(*philo, 1, i);
-	philo->table->total_e++;
+	printer(*philo, 1, philo->index);
 	custom_sleep(philo->table->t_to_eat, philo);
+	philo->table->total_e++;
 	pthread_mutex_unlock(&philo->fork);
-	pthread_mutex_unlock(&philo[i + 1].fork);
-	printer(*philo, 2, i);
+	pthread_mutex_unlock(&philo->philo_r->fork);
+	printer(*philo, 2, philo->index);
 	custom_sleep(philo->table->t_to_sleep, philo);
 }
 
@@ -48,11 +46,11 @@ void	*philo(void *p)
 		usleep(100);
 	while (philo->table->dead != 1)
 	{
-		eat_handler(philo->index, philo);
-		if (philo->table->t_philo == 1)
-			return (NULL);
 		if (philo->table->total_e
 			>= philo->table->t_food * philo->table->t_philo)
+			return (NULL);
+		eat_handler(philo);
+		if (philo->table->t_philo == 1)
 			return (NULL);
 		if (philo->table->t_philo > 1)
 			think(philo->index, philo);
@@ -60,7 +58,7 @@ void	*philo(void *p)
 	return (NULL);
 }
 
-void	thread_handler(t_table *table)
+void	thread_init(const t_table *table)
 {
 	size_t	i;
 
@@ -68,14 +66,22 @@ void	thread_handler(t_table *table)
 	while (++i < table->t_philo)
 		pthread_create(&(table->philo[i].th), NULL, philo,
 			&table->philo[i]);
+}
+
+void	thread_handler(t_table *table)
+{
+	size_t	i;
+
+	thread_init(table);
 	i = -1;
 	while (table->dead != 1)
 	{
 		if (i == table->t_philo - 1)
 			i = -1;
 		pthread_mutex_lock(&table->death);
-		if (table->total_e == table->t_food * table->t_philo
-			|| get_time() - table->philo[++i].l_eat >= table->t_to_die)
+		if (table->total_e
+			>= table->t_food * table->t_philo || get_time()
+			- table->philo[++i].l_eat >= table->t_to_die)
 		{
 			table->dead = 1;
 			if (table->total_e != table->t_food * table->t_philo)
@@ -91,6 +97,7 @@ void	thread_handler(t_table *table)
 			return ;
 		}
 		pthread_mutex_unlock(&table->death);
+		usleep(100);
 	}
 }
 
@@ -105,10 +112,10 @@ long	get_time(void)
 
 void	philo_init(t_table *table)
 {
-	int	i;
+	size_t	i;
 
 	i = -1;
-	while (++i < (int)table->t_philo)
+	while (++i < table->t_philo)
 	{
 		table->philo[i].l_eat = table->time;
 		table->philo[i].index = i + 1;
@@ -116,6 +123,14 @@ void	philo_init(t_table *table)
 		table->philo[i].table = table;
 		pthread_mutex_init(&table->philo[i].fork, NULL);
 	}
+	i = -1;
+	while (++i < table->t_philo - 1)
+	{
+		table->philo[i].philo_l = &table->philo[table->t_philo - i - 1];
+		table->philo[i].philo_r = &table->philo[i + 1];
+	}
+	table->philo[table->t_philo - 1].philo_l = &table->philo[table->t_philo - 2];
+	table->philo[table->t_philo - 1].philo_r = &table->philo[0];
 	table->dead = 0;
 	pthread_mutex_init(&table->print, NULL);
 	pthread_mutex_init(&table->death, NULL);
