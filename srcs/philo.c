@@ -79,12 +79,12 @@ void	thread_handler(t_table *table)
 		if (i == table->t_philo - 1)
 			i = -1;
 		pthread_mutex_lock(&table->death);
-		if (table->total_e
-			>= table->t_food * table->t_philo || get_time()
+		if ((table->total_e
+			>= table->t_food * table->t_philo) || get_time()
 			- table->philo[++i].l_eat >= table->t_to_die)
 		{
 			table->dead = 1;
-			if (table->total_e != table->t_food * table->t_philo)
+			if (table->total_e < table->t_food * table->t_philo)
 				printer(table->philo[i], -1, table->philo[i].index);
 			i = -1;
 			while (++i < table->t_philo)
