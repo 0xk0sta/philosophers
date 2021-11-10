@@ -10,7 +10,7 @@ void	custom_sleep(size_t w_time, t_philo *philo)
 	{
 		if (get_time() - time >= w_time)
 			break ;
-		usleep(10);
+		usleep(100);
 	}
 }
 
@@ -43,7 +43,7 @@ void	*philo(void *p)
 
 	philo = (t_philo *)p;
 	if (philo->index % 2 == 0)
-		usleep(100);
+		usleep(1000);
 	while (philo->table->dead != 1)
 	{
 		if (philo->table->total_e
@@ -90,10 +90,7 @@ void	thread_handler(t_table *table)
 			while (++i < table->t_philo)
 				pthread_join(table->philo[i].th, NULL);
 			while (++i < table->t_philo)
-			{
 				pthread_mutex_destroy(&table->philo[i].fork);
-				pthread_detach(table->philo[i].th);
-			}
 			return ;
 		}
 		pthread_mutex_unlock(&table->death);
