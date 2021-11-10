@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acostal- <acostal-@student.42madrid>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/10 17:53:57 by acostal-          #+#    #+#             */
+/*   Updated: 2021/11/10 17:53:59 by acostal-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # include <stdio.h>
 # include <unistd.h>
@@ -39,11 +51,18 @@ typedef struct s_table
 	unsigned long	t_to_die;
 	unsigned long	t_to_eat;
 	unsigned long	t_to_sleep;
-	long	t_food;
+	long			t_food;
 }t_table;
 void			printer(t_philo philo, int status, size_t in);
 int				fill_struct(int argc, char **argv, t_table *table);
 long			ft_atoi(const char *str);
 int				validate_args(t_table *table, int argc);
 long			get_time(void);
+void			custom_sleep(size_t w_time, t_philo *philo);
+void			philo_init(t_table *table);
+void			init_struct(t_table *table);
+void			eat_handler(t_philo *philo);
+void			*philo(void *p);
+void			thread_init(const t_table *table);
+void			thread_handler(t_table *table);
 #endif

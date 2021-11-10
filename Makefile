@@ -7,10 +7,12 @@ CCFLAGS = -pthread
 
 SRCD = srcs
 
-SRC=	error_handle.c		\
+SRC=	main.c 				\
 		parse_utils.c		\
 		philo.c				\
-		status_handler.c
+		status_handler.c	\
+		custom_utils.c		\
+		initializers.c
 
 OBJ=$(SRC:%.c=%.o)
 
