@@ -1,8 +1,9 @@
 NAME = philo
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pthread
+CFLAGS = -Wall -Wextra -Werror
 CFLAGS += -I includes/
+CCFLAGS = -pthread
 
 SRCD = srcs
 
@@ -19,7 +20,7 @@ OBJS=$(addprefix srcs/, $(OBJ))
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $^ -o $@ $(CFLAGS) $(LDFLAGS)
+	$(CC) $^ -o $@ $(CFLAGS) $(LDFLAGS) $(CCFLAGS)
 
 $(OBJD)/%.o: $(SRCD)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
