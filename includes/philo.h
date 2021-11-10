@@ -39,7 +39,7 @@ typedef struct s_table
 	unsigned long	t_to_die;
 	unsigned long	t_to_eat;
 	unsigned long	t_to_sleep;
-	unsigned long	t_food;
+	long	t_food;
 }t_table;
 void			printer(t_philo philo, int status, size_t in);
 int				fill_struct(int argc, char **argv, t_table *table);
