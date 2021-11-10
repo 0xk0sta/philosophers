@@ -3,7 +3,8 @@
 void	printer(t_philo philo, int status, size_t in)
 {
 	pthread_mutex_lock(&philo.table->print);
-	if (philo.table->dead == 0)
+	if (philo.table->dead == 0
+		|| (philo.table->total_e <= philo.table->t_food * philo.table->t_philo))
 	{
 		if (status == 0)
 			printf("%s[%lu ms]|[ %s %zu %s ]\n", GREEN,
